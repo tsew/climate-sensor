@@ -23,8 +23,6 @@ LiquidCrystal lcd(LCD_RESET, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DA
 
 */
 
-#undef SERIAL
-
 ///********* UNO
 #define POWER 2  // D2
 #define RADIO 3 // D3
@@ -34,9 +32,8 @@ LiquidCrystal lcd(LCD_RESET, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DA
 byte device_ID = 0xB1;  // B0 = 170 , so B1 = bedroom 1 etc
 
 #define LED 1       // LED PIN on board
-
 //#define THN132N
-#undef THN132N
+#undef SERIAL
 
 boolean light = false;
 int value = 0;
