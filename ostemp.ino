@@ -34,7 +34,7 @@ LiquidCrystal lcd(LCD_RESET, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DA
 
 byte device_ID = 0xB1;  // B0 = 170 , so B1 = bedroom 1 etc
 
-#define LED 13				// LED PIN on board
+#define LED 1				// LED PIN on board
 
 //#define THN132N
 #undef THN132N
@@ -533,5 +533,5 @@ void loop()
 		digitalWrite(POWER, LOW);
 	}
 	// Wait for 300 seconds before we start again
-	delay(15 * 1000); // 30 seconds.
+	delay(296 * 1000); 
 }
