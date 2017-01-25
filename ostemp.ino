@@ -23,18 +23,17 @@ LiquidCrystal lcd(LCD_RESET, LCD_ENABLE, LCD_DATA4, LCD_DATA5, LCD_DATA6, LCD_DA
 
 */
 
+#undef SERIAL
 
 ///********* UNO
-#define POWER 2	// D2
+#define POWER 2  // D2
 #define RADIO 3 // D3
 #define DHT_POWER 4 // D4
 #define DHT_DATA 5 // D5
 
-//*/
-
 byte device_ID = 0xB1;  // B0 = 170 , so B1 = bedroom 1 etc
 
-#define LED 1				// LED PIN on board
+#define LED 1       // LED PIN on board
 
 //#define THN132N
 #undef THN132N
@@ -63,14 +62,14 @@ byte buff[9];
 */
 inline void sendZero(void)
 {
-	digitalWrite(LED, HIGH);
-	SEND_HIGH();
-	delayMicroseconds(TIME);
-	SEND_LOW();
-	delayMicroseconds(TWOTIME);
-	SEND_HIGH();
-	delayMicroseconds(TIME);
-	digitalWrite(LED, LOW);
+  digitalWrite(LED, HIGH);
+  SEND_HIGH();
+  delayMicroseconds(TIME);
+  SEND_LOW();
+  delayMicroseconds(TWOTIME);
+  SEND_HIGH();
+  delayMicroseconds(TIME);
+  digitalWrite(LED, LOW);
 }
 
 /**
@@ -81,14 +80,14 @@ inline void sendZero(void)
 */
 inline void sendOne(void)
 {
-	digitalWrite(LED, HIGH);
-	SEND_LOW();
-	delayMicroseconds(TIME);
-	SEND_HIGH();
-	delayMicroseconds(TWOTIME);
-	SEND_LOW();
-	delayMicroseconds(TIME);
-	digitalWrite(LED, LOW);
+  digitalWrite(LED, HIGH);
+  SEND_LOW();
+  delayMicroseconds(TIME);
+  SEND_HIGH();
+  delayMicroseconds(TWOTIME);
+  SEND_LOW();
+  delayMicroseconds(TIME);
+  digitalWrite(LED, LOW);
 }
 
 /**
@@ -103,10 +102,10 @@ inline void sendOne(void)
 */
 inline void sendQuarterMSB(const byte data)
 {
-	(bitRead(data, 4)) ? sendOne() : sendZero();
-	(bitRead(data, 5)) ? sendOne() : sendZero();
-	(bitRead(data, 6)) ? sendOne() : sendZero();
-	(bitRead(data, 7)) ? sendOne() : sendZero();
+  (bitRead(data, 4)) ? sendOne() : sendZero();
+  (bitRead(data, 5)) ? sendOne() : sendZero();
+  (bitRead(data, 6)) ? sendOne() : sendZero();
+  (bitRead(data, 7)) ? sendOne() : sendZero();
 }
 
 /**
@@ -115,10 +114,10 @@ inline void sendQuarterMSB(const byte data)
 */
 inline void sendQuarterLSB(const byte data)
 {
-	(bitRead(data, 0)) ? sendOne() : sendZero();
-	(bitRead(data, 1)) ? sendOne() : sendZero();
-	(bitRead(data, 2)) ? sendOne() : sendZero();
-	(bitRead(data, 3)) ? sendOne() : sendZero();
+  (bitRead(data, 0)) ? sendOne() : sendZero();
+  (bitRead(data, 1)) ? sendOne() : sendZero();
+  (bitRead(data, 2)) ? sendOne() : sendZero();
+  (bitRead(data, 3)) ? sendOne() : sendZero();
 }
 
 /******************************************************************/
@@ -132,11 +131,11 @@ inline void sendQuarterLSB(const byte data)
 */
 void sendData(byte *data, byte size)
 {
-	for (byte i = 0; i < size; ++i)
-	{
-		sendQuarterLSB(data[i]);
-		sendQuarterMSB(data[i]);
-	}
+  for (byte i = 0; i < size; ++i)
+  {
+    sendQuarterLSB(data[i]);
+    sendQuarterMSB(data[i]);
+  }
 }
 
 /**
@@ -145,10 +144,10 @@ void sendData(byte *data, byte size)
 */
 void sendOregon(byte *data, byte size)
 {
-	sendPreamble();
-	//sendSync();
-	sendData(data, size);
-	sendPostamble();
+  sendPreamble();
+  //sendSync();
+  sendData(data, size);
+  sendPostamble();
 }
 
 /**
@@ -157,8 +156,8 @@ void sendOregon(byte *data, byte size)
 */
 inline void sendPreamble(void)
 {
-	byte PREAMBLE[] = { 0xFF, 0xFF };
-	sendData(PREAMBLE, 2);
+  byte PREAMBLE[] = { 0xFF, 0xFF };
+  sendData(PREAMBLE, 2);
 }
 
 /**
@@ -168,10 +167,10 @@ inline void sendPreamble(void)
 inline void sendPostamble(void)
 {
 #ifdef THN132N
-	sendQuarterLSB(0x00);
+  sendQuarterLSB(0x00);
 #else
-	byte POSTAMBLE[] = { 0x00 };
-	sendData(POSTAMBLE, 1);
+  byte POSTAMBLE[] = { 0x00 };
+  sendData(POSTAMBLE, 1);
 #endif
 }
 
@@ -182,7 +181,7 @@ inline void sendPostamble(void)
 */
 inline void sendSync(void)
 {
-	sendQuarterLSB(0xA);
+  sendQuarterLSB(0xA);
 }
 
 /******************************************************************/
@@ -196,8 +195,8 @@ inline void sendSync(void)
 */
 inline void setType(byte *data, byte* type)
 {
-	data[0] = type[0];
-	data[1] = type[1];
+  data[0] = type[0];
+  data[1] = type[1];
 }
 
 /**
@@ -207,7 +206,7 @@ inline void setType(byte *data, byte* type)
 */
 inline void setChannel(byte *data, byte channel)
 {
-	data[2] = channel;
+  data[2] = channel;
 }
 
 /**
@@ -217,7 +216,7 @@ inline void setChannel(byte *data, byte channel)
 */
 inline void setId(byte *data, byte ID)
 {
-	data[3] = ID;
+  data[3] = ID;
 }
 
 /**
@@ -227,8 +226,8 @@ inline void setId(byte *data, byte ID)
 */
 void setBatteryLevel(byte *data, byte level)
 {
-	if (!level) data[4] = 0x0C;
-	else data[4] = 0;
+  if (!level) data[4] = 0x0C;
+  else data[4] = 0;
 }
 
 /**
@@ -238,33 +237,33 @@ void setBatteryLevel(byte *data, byte level)
 */
 void setTemperature(byte *data, float temp)
 {
-	// Set temperature sign
-	if (temp < 0)
-	{
-		data[6] = 8;
-		temp *= -1;
-	}
-	else
-	{
-		data[6] = 0;
-	}
+  // Set temperature sign
+  if (temp < 0)
+  {
+    data[6] = 8;
+    temp *= -1;
+  }
+  else
+  {
+    data[6] = 0;
+  }
 
-	// Determine decimal and float part
-	int tempInt = (int)temp;
-	int td = (int)(tempInt / 10);
-	float tff = ((tempInt / 10.0) - (float)td) * 10.0;
-	int tf = (int)round(tff);
+  // Determine decimal and float part
+  int tempInt = (int)temp;
+  int td = (int)(tempInt / 10);
+  float tff = ((tempInt / 10.0) - (float)td) * 10.0;
+  int tf = (int)round(tff);
 
-	float tempFloatf = (temp - (float)tempInt) * 10.0;
+  float tempFloatf = (temp - (float)tempInt) * 10.0;
 
-	int tempFloat = (int)round(tempFloatf);
+  int tempFloat = (int)round(tempFloatf);
 
-	// Set temperature decimal part
-	data[5] = (td << 4);
-	data[5] |= tf;
+  // Set temperature decimal part
+  data[5] = (td << 4);
+  data[5] |= tf;
 
-	// Set temperature float part
-	data[4] |= (tempFloat << 4);
+  // Set temperature float part
+  data[4] |= (tempFloat << 4);
 }
 
 /**
@@ -274,15 +273,15 @@ void setTemperature(byte *data, float temp)
 */
 void setHumidity(byte* data, byte hum)
 {
-	char humid[3];
+  char humid[3];
 
-	itoa(hum, humid, 10);
+  itoa(hum, humid, 10);
 
 
-	//data[7] = (hum / 10);
-	//data[6] |= (10 * (hum - data[7])) << 4;
-	data[7] = humid[0];
-	data[6] |= humid[1] << 4;
+  //data[7] = (hum / 10);
+  //data[6] |= (10 * (hum - data[7])) << 4;
+  data[7] = humid[0];
+  data[6] |= humid[1] << 4;
 }
 
 /**
@@ -292,18 +291,18 @@ void setHumidity(byte* data, byte hum)
 */
 int Sum(byte count, const byte* data)
 {
-	int s = 0;
+  int s = 0;
 
-	for (byte i = 0; i < count; i++)
-	{
-		s += (data[i] & 0xF0) >> 4;
-		s += (data[i] & 0xF);
-	}
+  for (byte i = 0; i < count; i++)
+  {
+    s += (data[i] & 0xF0) >> 4;
+    s += (data[i] & 0xF);
+  }
 
-	if (int(count) != count)
-		s += (data[count] & 0xF0) >> 4;
+  if (int(count) != count)
+    s += (data[count] & 0xF0) >> 4;
 
-	return s;
+  return s;
 }
 
 /**
@@ -313,25 +312,25 @@ int Sum(byte count, const byte* data)
 void calculateAndSetChecksum(byte* data)
 {
 #ifdef THN132N
-	int s = ((Sum(6, data) + (data[6] & 0xF) - 0xA) & 0xFF);
-	data[6] |= (s & 0x0F) << 4;     
-	data[7] = (s & 0xF0) >> 4;
+  int s = ((Sum(6, data) + (data[6] & 0xF) - 0xA) & 0xFF);
+  data[6] |= (s & 0x0F) << 4;     
+  data[7] = (s & 0xF0) >> 4;
 #else
-	data[8] = ((Sum(8, data) - 0xA) & 0xFF);
+  data[8] = ((Sum(8, data) - 0xA) & 0xFF);
 #endif
 }
 
 
-#define DHTLIB_OK				0
-#define DHTLIB_ERROR_CHECKSUM	-1
-#define DHTLIB_ERROR_TIMEOUT	-2
+#define DHTLIB_OK       0
+#define DHTLIB_ERROR_CHECKSUM -1
+#define DHTLIB_ERROR_TIMEOUT  -2
 
 class dht11
 {
 public:
-	int read(int pin);
-	int humidity;
-	int temperature;
+  int read(int pin);
+  int humidity;
+  int temperature;
 };
 
 
@@ -345,62 +344,62 @@ public:
 
 int dht11::read(int pin)
 {
-	// BUFFER TO RECEIVE
-	uint8_t bits[5];
-	uint8_t cnt = 7;
-	uint8_t idx = 0;
+  // BUFFER TO RECEIVE
+  uint8_t bits[5];
+  uint8_t cnt = 7;
+  uint8_t idx = 0;
 
-	// EMPTY BUFFER
-	for (int i = 0; i < 5; i++) bits[i] = 0;
+  // EMPTY BUFFER
+  for (int i = 0; i < 5; i++) bits[i] = 0;
 
-	// REQUEST SAMPLE
-	pinMode(pin, OUTPUT);
-	digitalWrite(pin, LOW);
-	delay(18);
-	digitalWrite(pin, HIGH);
-	delayMicroseconds(40);
-	pinMode(pin, INPUT);
+  // REQUEST SAMPLE
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
+  delay(18);
+  digitalWrite(pin, HIGH);
+  delayMicroseconds(40);
+  pinMode(pin, INPUT);
 
-	// ACKNOWLEDGE or TIMEOUT
-	unsigned int loopCnt = 10000;
-	while (digitalRead(pin) == LOW)
-	if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
+  // ACKNOWLEDGE or TIMEOUT
+  unsigned int loopCnt = 10000;
+  while (digitalRead(pin) == LOW)
+  if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
 
-	loopCnt = 10000;
-	while (digitalRead(pin) == HIGH)
-	if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
+  loopCnt = 10000;
+  while (digitalRead(pin) == HIGH)
+  if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
 
-	// READ OUTPUT - 40 BITS => 5 BYTES or TIMEOUT
-	for (int i = 0; i < 40; i++)
-	{
-		loopCnt = 10000;
-		while (digitalRead(pin) == LOW)
-		if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
+  // READ OUTPUT - 40 BITS => 5 BYTES or TIMEOUT
+  for (int i = 0; i < 40; i++)
+  {
+    loopCnt = 10000;
+    while (digitalRead(pin) == LOW)
+    if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
 
-		unsigned long t = micros();
+    unsigned long t = micros();
 
-		loopCnt = 10000;
-		while (digitalRead(pin) == HIGH)
-		if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
+    loopCnt = 10000;
+    while (digitalRead(pin) == HIGH)
+    if (loopCnt-- == 0) return DHTLIB_ERROR_TIMEOUT;
 
-		if ((micros() - t) > 40) bits[idx] |= (1 << cnt);
-		if (cnt == 0)   // next byte?
-		{
-			cnt = 7;    // restart at MSB
-			idx++;      // next byte!
-		}
-		else cnt--;
-	}
+    if ((micros() - t) > 40) bits[idx] |= (1 << cnt);
+    if (cnt == 0)   // next byte?
+    {
+      cnt = 7;    // restart at MSB
+      idx++;      // next byte!
+    }
+    else cnt--;
+  }
 
-	// WRITE TO RIGHT VARS
-	// as bits[1] and bits[3] are allways zero they are omitted in formulas.
-	humidity = bits[0];
-	temperature = bits[2];
+  // WRITE TO RIGHT VARS
+  // as bits[1] and bits[3] are allways zero they are omitted in formulas.
+  humidity = bits[0];
+  temperature = bits[2];
 
-	uint8_t sum = bits[0] + bits[2];
+  uint8_t sum = bits[0] + bits[2];
 
-	if (bits[4] != sum) return DHTLIB_ERROR_CHECKSUM;
-	return DHTLIB_OK;
+  if (bits[4] != sum) return DHTLIB_ERROR_CHECKSUM;
+  return DHTLIB_OK;
 }
 
 
@@ -410,37 +409,38 @@ int dht11::read(int pin)
 
 void setup()
 {
-	/* add setup code here */
+  /* add setup code here */
 
 #ifdef MEGA
-	lcd.begin(16, 2);   // Set 16x2 LCD Display
-	lcd.command(14);	// Turn on Cursor
+  lcd.begin(16, 2);   // Set 16x2 LCD Display
+  lcd.command(14);  // Turn on Cursor
 #endif
-	pinMode(LED, OUTPUT);
-	pinMode(POWER, OUTPUT);
-	pinMode(RADIO, OUTPUT);
-	pinMode(DHT_POWER, OUTPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(POWER, OUTPUT);
+  pinMode(RADIO, OUTPUT);
+  pinMode(DHT_POWER, OUTPUT);
 
-	// Setup DHT & RADIO
-	digitalWrite(RADIO, LOW);
-	digitalWrite(POWER, LOW);
-	digitalWrite(DHT_POWER, LOW);
-
-	Serial.begin(57600);
-	Serial.println("\n[Oregon V2.1 encoder]");
-	// Create the Oregon message for a temperature/humidity sensor (THGR2228N)
+  // Setup DHT & RADIO
+  digitalWrite(RADIO, LOW);
+  digitalWrite(POWER, LOW);
+  digitalWrite(DHT_POWER, LOW);
+#ifdef SERIAL
+  Serial.begin(57600);
+  Serial.println("\n[Oregon V2.1 encoder]");
+#endif
+  // Create the Oregon message for a temperature/humidity sensor (THGR2228N)
 #ifdef THN132N 
-	// Create the Oregon message for a temperature only sensor (TNHN132N)
-	byte ID[] = { 0xEA, 0x4C };
+  // Create the Oregon message for a temperature only sensor (TNHN132N)
+  byte ID[] = { 0xEA, 0x4C };
 #else
-	// Create the Oregon message for a temperature/humidity sensor (THGR2228N)
-	byte ID[] = { 0x1A, 0x2D };
+  // Create the Oregon message for a temperature/humidity sensor (THGR2228N)
+  byte ID[] = { 0x1A, 0x2D };
 #endif 
-	setType(buff, ID);
-	setChannel(buff, 0x11);
-	setId(buff, device_ID);
+  setType(buff, ID);
+  setChannel(buff, 0x11);
+  setId(buff, device_ID);
 
-	// Wait for DHT to setup
+  // Wait for DHT to setup
 }
 
 float temperature = 0.0;
@@ -451,87 +451,90 @@ dht11 DHT11;
 
 void loop()
 {
-	// Switch on the DHT and wait 2 seconds
-	digitalWrite(DHT_POWER, HIGH);
-	delay(2000);
+  // Switch on the DHT and wait 2 seconds
+  digitalWrite(DHT_POWER, HIGH);
+  delay(2000);
 
-	chk = DHT11.read(DHT_DATA);
-	switch (chk)
-	{
-	case DHTLIB_OK:
-		Serial.println("OK");
-		break;
-	case DHTLIB_ERROR_CHECKSUM:
-		Serial.println("Checksum error");
-		break;
-	case DHTLIB_ERROR_TIMEOUT:
-		Serial.println("Time out error");
-		break;
-	default:
-		Serial.println("Unknown error");
-	}
-
-
-	if (chk == DHTLIB_OK)
-	{
-		temperature = DHT11.temperature;
-		humidity = DHT11.humidity;
-
-		// turn off the sensor
-		digitalWrite(DHT_POWER, LOW);
-
-		Serial.print(temperature);
-		Serial.print("C      ");
-		Serial.print(humidity);
-		Serial.print("%     ");
-#ifdef MEGA	
-		lcd.home();
-		lcd.print("Temp: ");
-		lcd.print(temperature);
-		lcd.print("C");
-		lcd.setCursor(0, 1);
-		lcd.print(" Hum: ");
-		lcd.print(humidity);
-		lcd.print("%");
+  chk = DHT11.read(DHT_DATA);
+#ifdef SERIAL    
+  switch (chk) {
+    case DHTLIB_OK:
+      Serial.println("OK");
+      break;
+    case DHTLIB_ERROR_CHECKSUM:
+      Serial.println("Checksum error");
+      break;
+    case DHTLIB_ERROR_TIMEOUT:
+      Serial.println("Time out error");
+      break;
+    default:
+    Serial.println("Unknown error");
+  }
 #endif
-		// Get Temperature, humidity and battery level from sensors
-		// (ie: 1wire DS18B20 for température, …)
-		setBatteryLevel(buff, 1); // 0 : low, 1 : high
-		setTemperature(buff, temperature);
+
+  if (chk == DHTLIB_OK)
+  {
+    temperature = DHT11.temperature;
+    humidity = DHT11.humidity;
+
+    // turn off the sensor
+    digitalWrite(DHT_POWER, LOW);
+#ifdef SERIAL
+    Serial.print(temperature);
+    Serial.print("C      ");
+    Serial.print(humidity);
+    Serial.print("%     ");
+#endif
+#ifdef MEGA 
+    lcd.home();
+    lcd.print("Temp: ");
+    lcd.print(temperature);
+    lcd.print("C");
+    lcd.setCursor(0, 1);
+    lcd.print(" Hum: ");
+    lcd.print(humidity);
+    lcd.print("%");
+#endif
+    // Get Temperature, humidity and battery level from sensors
+    // (ie: 1wire DS18B20 for température, …)
+    setBatteryLevel(buff, 1); // 0 : low, 1 : high
+    setTemperature(buff, temperature);
 
 #ifndef THN132N
-		// Set Humidity
-		setHumidity(buff, humidity);
+    // Set Humidity
+    setHumidity(buff, humidity);
 #endif 
 
-		// Calculate the checksum
-		calculateAndSetChecksum(buff);
+    // Calculate the checksum
+    calculateAndSetChecksum(buff);
 
-		// Show the Oregon Message
-		for (byte i = 0; i < sizeof(buff); ++i)   {
-			Serial.print(buff[i] >> 4, HEX);
-			Serial.print(buff[i] & 0x0F, HEX);
-		}
+    // Show the Oregon Message
+#ifdef SERIAL
+    for (byte i = 0; i < sizeof(buff); ++i)   {
+      Serial.print(buff[i] >> 4, HEX);
+      Serial.print(buff[i] & 0x0F, HEX);
+      Serial.println();
+    }
+#endif
 
-		// Turn on the radio for transmit
-		digitalWrite(POWER, HIGH);
+    // Turn on the radio for transmit
+    digitalWrite(POWER, HIGH);
 
-		// Send the Message over RF
-		sendOregon(buff, sizeof(buff));
-		Serial.println();
-		// Send a “pause”
-		
-		SEND_LOW();
-		delayMicroseconds(TWOTIME * 8);
-		// Send a copy of the first message. The v2.1 protocol send the
-		// message two time
-		sendOregon(buff, sizeof(buff));
+    // Send the Message over RF
+    sendOregon(buff, sizeof(buff));
+    // Send a “pause”
+    
+    SEND_LOW();
+    delayMicroseconds(TWOTIME * 8);
+    // Send a copy of the first message. The v2.1 protocol send the
+    // message two time
+    sendOregon(buff, sizeof(buff));
 
-		// Send low signal for 1s then turn off
-		SEND_LOW();
-		delay(1000);
-		digitalWrite(POWER, LOW);
-	}
-	// Wait for 300 seconds before we start again
-	delay(296 * 1000); 
+    // Send low signal for 1s then turn off
+    SEND_LOW();
+    delay(1000);
+    digitalWrite(POWER, LOW);
+  }
+  // Wait for 300 seconds before we start again
+  delay(296 * 1000); 
 }
