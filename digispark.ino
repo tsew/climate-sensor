@@ -2,12 +2,12 @@
 // http://www.altelectronics.co.uk/arduino-uno-based-oregon-scientific-v-2-1-sensor-emulator-transmission/
 // http://playground.arduino.cc/main/DHT11Lib
 
-///********* DIGISPARK
-#define RADIO 6 // D5
-#define DHT_POWER 4 // D3
-#define DHT_DATA 3 // D2
+///********* DIGISPARK  - Free D4 and D3 for USB
+#define RADIO 5 // D5
+#define DHT_POWER 0 // D0
+#define DHT_DATA 2 // D2
 
-#define LED 2 // D1
+#define LED 1 // D1
 
 byte device_ID = 0xB2;  // B0 = 170 , so B1 = bedroom 1 etc
 
